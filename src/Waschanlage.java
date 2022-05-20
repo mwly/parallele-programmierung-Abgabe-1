@@ -1,7 +1,8 @@
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 
@@ -93,70 +94,94 @@ public class Waschanlage {
         private int warteschlangeSaugen;
         private int warteschlangeBeides;    
         
+        private final ReentrantLock lock = new ReentrantLock();
+        private final Condition condition = lock.newCondition();
+        
+        
         public Warteschlangen() {
             warteschlangeBeides = 0;
             warteschlangeSaugen = 0;
             warteschlangeWaschen = 0;
         }
 
-        public synchronized void WarteAufAutos (){
+        public void WarteAufAutos (){
+            lock.lock();
             try {
-                wait();
+                condition.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }finally{
+                lock.unlock();
             }
         }
 
-        public synchronized void SchickeAutosNachHause(){
+        public void SchickeAutosNachHause(){
+            lock.lock();
             System.out.println("Autos die auf Wäsche und Saugen gewartet haben: " + warteschlangeBeides);
             System.out.println("Autos die auf Wäsche gewartet haben: " + warteschlangeWaschen);
             System.out.println("Autos die auf Saugen gewartet haben: " + warteschlangeSaugen);
-            notifyAll();
+            condition.signal();
+            lock.unlock();
         }
 
-        public synchronized void ReiheAutosInWarteschlangeWaschen (int Wert) {
+        public void ReiheAutosInWarteschlangeWaschen (int Wert) {
+            lock.lock();
             System.out.println(Wert + " neu in Warteschlange Waschen");
             warteschlangeWaschen += Wert;
-            notifyAll();
+            condition.signal();
+            lock.unlock();
         }
 
-        public synchronized void ReiheAutosInWarteschlangeBeides (int Wert) {
+        public void ReiheAutosInWarteschlangeBeides (int Wert) {
+            lock.lock();
             System.out.println(Wert + " neu in Warteschlange Beides");
             warteschlangeBeides += Wert;
-            notifyAll();
+            condition.signal();
+            lock.unlock();
         }
 
-        public synchronized void ReiheAutosInWarteschlangeSaugen (int Wert) {
+        public void ReiheAutosInWarteschlangeSaugen (int Wert) {
+            lock.lock();
             System.out.println(Wert + " neu in Warteschlange Saugen");
             warteschlangeSaugen += Wert;
-            notifyAll();
+            condition.signal();
+            lock.unlock();
         }
 
-        public synchronized boolean AutosInWarteschlangeWaschen () {
+        public boolean AutosInWarteschlangeWaschen () {
+            lock.lock();
+            boolean r = true;
             if (warteschlangeWaschen == 0){
-                return false;
+                r = false;
             }else{
                 warteschlangeWaschen--;
-                return true;
             }
+            lock.unlock();
+            return r;
         }
 
-        public synchronized boolean AutosInWarteschlangeBeides () {
+        public boolean AutosInWarteschlangeBeides () {
+            lock.lock();
+            boolean r = true;
             if (warteschlangeBeides == 0){
-                return false;
+                r = false;
             }else{
                 warteschlangeBeides--;
-                return true;
             }
+            lock.unlock();
+            return r;
         }
 
-        public synchronized boolean AutosInWarteschlangeSaugen () {
+        public boolean AutosInWarteschlangeSaugen () {
+            lock.lock();
+            var r = true;
             if (warteschlangeSaugen == 0){
-                return false;
+                r = false;
             }else{
                 warteschlangeSaugen--;
-                return true;
             }
+            lock.unlock();
+            return r;
         }
 
         
@@ -171,7 +196,6 @@ public class Waschanlage {
         public boolean offen;
         private Warteschlangen warteschlangen;
 
-        
 
 
         public Waschstraße(int initID, Warteschlangen ws){
