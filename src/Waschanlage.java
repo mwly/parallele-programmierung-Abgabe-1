@@ -1,4 +1,9 @@
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+
+
 
 /**
  * Waschanlage
@@ -11,6 +16,7 @@ public class Waschanlage {
     private Waschstraße[] waschstraßen;
     private BoxInnenreinigung[] boxen;
 
+    public static ExecutorService pool = Executors.newFixedThreadPool(5);
 
     public Waschanlage () {
         
@@ -42,14 +48,20 @@ public class Waschanlage {
     private void erbaueBoxen() {
         BoxInnenreinigung Box1 = new BoxInnenreinigung(1,warteschlangen);
         BoxInnenreinigung Box2 = new BoxInnenreinigung(2, warteschlangen);
-
+        pool.execute(Box1);
+        pool.execute(Box2);
         boxen = new BoxInnenreinigung[]{Box1,Box2};
+
     }
 
     private void erbaueWaschstraßen() {
         Waschstraße Straße1 = new Waschstraße(1,warteschlangen);
         Waschstraße Straße2 = new Waschstraße(2,warteschlangen);
         Waschstraße Straße3 = new Waschstraße(3,warteschlangen);
+        
+        pool.execute(Straße1);
+        pool.execute(Straße2);
+        pool.execute(Straße3);
         
         waschstraßen = new Waschstraße[]{Straße1, Straße2, Straße3};
     }
@@ -66,7 +78,9 @@ public class Waschanlage {
         for (var elemBox : boxen) {
             elemBox.offen = false ;
         }
-        
+
+        pool.shutdown();
+
         System.out.println("Schließe Tankstelle. Alle Autos die gerade noch geputzt werden, dürfen dies Beenden. Der Rest muss leider morgen wiederkommen.");
     }
 
@@ -153,10 +167,12 @@ public class Waschanlage {
      * Waschstraße
      */
     public static class Waschstraße implements Runnable{
-        private Thread thread;
         public int id,max,min;
         public boolean offen;
         private Warteschlangen warteschlangen;
+
+        
+
 
         public Waschstraße(int initID, Warteschlangen ws){
             id = initID;
@@ -165,8 +181,6 @@ public class Waschanlage {
             offen = true;
             warteschlangen = ws;
 
-            thread = new Thread(this);
-            thread.start();
         }
         public void Waschen(){
             System.out.println("Splish von Waschstraße " + this.id);
@@ -220,7 +234,6 @@ public class Waschanlage {
      * BoxInnenreinigung
      */
     public class BoxInnenreinigung implements Runnable{
-        private Thread thread; 
         public int id,max,min;
         public boolean offen;
         private Warteschlangen warteschlangen;
@@ -232,8 +245,6 @@ public class Waschanlage {
             min = 1;
             offen = true;
             warteschlangen = ws;
-            thread = new Thread(this);
-            thread.start();
 
         }
         
