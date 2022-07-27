@@ -8,7 +8,7 @@ public class App {
         Waschanlage ourWaschanlage = new Waschanlage();
         ourWaschanlage.Preise();
         
-        ZeitSimulator ourZeitsimulator = new ZeitSimulator( 50 ,ourWaschanlage);
+        ZeitSimulator ourZeitsimulator = new ZeitSimulator( 500 ,ourWaschanlage);
 
         Thread tZeitSimulator = new Thread(ourZeitsimulator);
 
