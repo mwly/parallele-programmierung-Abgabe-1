@@ -10,12 +10,12 @@ public class ZeitSimulator implements Runnable {
 
     public static int zeitfaktor = 50;
 
-    private int counter;
+    private int percentageCounter;
     public ZeitSimulator(int zf,Waschanlage wa){
         // Um eine Annäherung an eine "Live" Simulation zu bekommen muss der zeitfaktor zf = 1000 sein
         zeitfaktor = zf;
         waschanlage = wa;
-        counter = 0;
+        percentageCounter = 0;
     }
 
     @Override
@@ -81,15 +81,15 @@ public class ZeitSimulator implements Runnable {
     }
 
     private void generiereNachmittagsKunden(){
-        int kunden = (int) Math.floor(Math.random()*(3-1)+1);
+        int kunden = (int) Math.floor(Math.random()*(2)+1);
         switch (kunden) {
             case 1:
-                if(counter == 0){
+                if(percentageCounter == 0){
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1);
-                    counter++;
+                    percentageCounter++;
                 }else{
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1);
-                    counter--;
+                    percentageCounter--;
                 }
                 
                 break;
@@ -98,14 +98,14 @@ public class ZeitSimulator implements Runnable {
                 waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1);
                 break;
             case 3:
-                if(counter == 0){
+                if(percentageCounter == 0){
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2);
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1);
-                    counter++;
+                    percentageCounter++;
                 }else{
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1);
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2);
-                    counter--;
+                    percentageCounter--;
                 }
                 break;
             default:
@@ -114,41 +114,41 @@ public class ZeitSimulator implements Runnable {
     }
  
     private void generiereRushHourKunden() {
-        int kunden = (int) Math.floor(Math.random()*(6-3)+3);
+        int kunden = (int) Math.floor(Math.random()*(3)+3);
         switch (kunden) {
             case 6:
                 waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(4);
                 waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2);
                 break;
             case 5:
-                if(counter == 0){
+                if(percentageCounter == 0){
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(4);
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1);
-                    counter++;
+                    percentageCounter++;
                 }else{
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(3);
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2); 
-                    if (counter == 1){
-                        counter++;
+                    if (percentageCounter == 1){
+                        percentageCounter++;
                     }else{
-                        counter = 0 ;
+                        percentageCounter = 0 ;
                     }
                 
                 }
                 
                 break;
             case 4:
-                if(counter == 1){
+                if(percentageCounter == 1){
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2);
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2); 
-                    counter--;
+                    percentageCounter--;
                 }else{
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(3);
                     waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1);
-                    if (counter == 2){
-                        counter--;
+                    if (percentageCounter == 2){
+                        percentageCounter--;
                     }else {
-                        counter = 2;
+                        percentageCounter = 2;
                     }
                 }
                 
@@ -166,7 +166,7 @@ public class ZeitSimulator implements Runnable {
     
     
     private void generiereAbendsKunden() {
-        int kunden = (int) Math.floor(Math.random()*(2-1)+1);
+        int kunden = (int) Math.floor(Math.random()*(1)+1);
         waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(kunden);
     }
 

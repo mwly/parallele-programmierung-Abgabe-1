@@ -278,7 +278,7 @@ public class Waschanlage {
         }
         
         public void StopSaugen(int chipzahl) {
-            System.out.println("Nach " + chipzahl*3 + " Minuten herrscht Stille in Box " + this.id);
+            System.out.println("Nach " + chipzahl*5 + " Minuten herrscht Stille in Box " + this.id);
 
         }
 
