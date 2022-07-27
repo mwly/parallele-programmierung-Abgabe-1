@@ -1,10 +1,9 @@
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 
 
@@ -92,18 +91,18 @@ public class Waschanlage {
      */
     public static class Warteschlangen {
     
-        private LinkedBlockingQueue<String> warteschlangeWaschen;
-        private LinkedBlockingQueue<String> warteschlangeSaugen;
-        private LinkedBlockingQueue<String> warteschlangeBeides;    
+        private PriorityBlockingQueue<String> warteschlangeWaschen;
+        private PriorityBlockingQueue<String> warteschlangeSaugen;
+        private PriorityBlockingQueue<String> warteschlangeBeides;    
        
         private final ReentrantLock lock = new ReentrantLock();
         private final Condition condition = lock.newCondition();
         
         
         public Warteschlangen() {
-            warteschlangeBeides = new LinkedBlockingQueue<String>();
-            warteschlangeSaugen = new LinkedBlockingQueue<String>();
-            warteschlangeWaschen = new LinkedBlockingQueue<String>();
+            warteschlangeBeides = new PriorityBlockingQueue<String>();
+            warteschlangeSaugen = new PriorityBlockingQueue<String>();
+            warteschlangeWaschen =new PriorityBlockingQueue<String>();
         }
 
         public void WarteAufAutos (){
@@ -119,9 +118,9 @@ public class Waschanlage {
 
         public void SchickeAutosNachHause(){
             lock.lock();
-            System.out.println("Autos die auf Wäsche und Saugen gewartet haben: " + warteschlangeBeides.size());
-            System.out.println("Autos die auf Wäsche gewartet haben: " + warteschlangeWaschen.size());
-            System.out.println("Autos die auf Saugen gewartet haben: " + warteschlangeSaugen.size());
+            System.out.println("Autos die auf Wäsche und Saugen gewartet haben: " + warteschlangeBeides.toString());
+            System.out.println("Autos die auf Wäsche gewartet haben: " + warteschlangeWaschen.toString());
+            System.out.println("Autos die auf Saugen gewartet haben: " + warteschlangeSaugen.toString());
             condition.signal();
             lock.unlock();
         }
@@ -232,7 +231,7 @@ public class Waschanlage {
                             e.printStackTrace();
                         };
                         StopWaschen(zeit);
-                        System.out.println("Jedoch möchte das Auto noch gesaugt werden.");
+                        System.out.println("Jedoch möchte "+ Auto +"noch gesaugt werden.");
                         if(offen){
                         warteschlangen.ReiheAutosInWarteschlangeSaugen(1, new String[] {Auto});
                         }else{
@@ -290,7 +289,7 @@ public class Waschanlage {
                         e.printStackTrace();
                     };
                     StopSaugen(chipzahl);
-                    System.out.println("Jedoch möchte das Auto noch gewaschen werden.");
+                    System.out.println("Jedoch möchte "+ Auto +"noch gewaschen werden.");
                     if(offen){
                         warteschlangen.ReiheAutosInWarteschlangeWaschen(1, new String[] {Auto});
                     }else{

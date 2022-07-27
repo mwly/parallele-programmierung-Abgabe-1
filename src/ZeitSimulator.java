@@ -23,6 +23,12 @@ public class ZeitSimulator implements Runnable {
     @Override
     public void run() {
 
+        System.out.println("Starte Zeitsimulator");
+        System.out.println("Autos, die Nachmittags hinzugefügt werden, bekommen eine ID zwischen 000 und 100 zugeordnet");
+        System.out.println("Autos, die während der RuschHour hinzugefügt werden, bekommen eine ID zwischen 100 und 200 zugeordnet");
+        System.out.println("Autos, die Abends hinzugefügt werden, bekommen eine ID zwischen 200 und 300 zugeordnet");
+        System.out.println("Autos, die eine Premiummitgliedschaft abgeschlossen haben, führen eine 1, Autos ohne Mitgliedschaft eine 2.");
+       
         nachmittags();
                 
         ruschHour();
@@ -34,7 +40,7 @@ public class ZeitSimulator implements Runnable {
     }
 
     private void nachmittags() {
-        int x = 0;
+        int x = 2000;
         for ( int i = 0; i < 60 ; i++){
             System.out.println("Nachmittags-Min: " + (i+1));
             if (i%5 == 0){
@@ -49,7 +55,7 @@ public class ZeitSimulator implements Runnable {
     }
 
     private void ruschHour() {
-        int x = 0;
+        int x = 2100;
         for ( int i = 0; i < 60 ; i++){
             System.out.println("RuschHour-Min: " + (i+1));
             if (i%5 == 0){
@@ -65,7 +71,7 @@ public class ZeitSimulator implements Runnable {
 
 
     private void abends() {
-        int x = 0;
+        int x = 2200;
         for ( int i = 0; i < 60 ; i++){
             System.out.println("Abends-Min: " + (i+1));
             if (i%5 == 0){
@@ -90,26 +96,26 @@ public class ZeitSimulator implements Runnable {
         switch (kunden) {
             case 1:
                 if(percentageCounter == 0){
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1,new String[] {"NachmittagAuto#" + (no+1) });
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1000 : 0)) });
                     percentageCounter++;
                 }else{
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"NachmittagAuto#" + (no+1) });
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"Auto#" + ((no+1)  - (Math.random()<0.3 ? 1000 : 0))});
                     percentageCounter--;
                 }
                 
                 break;
             case 2:
-                waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1,new String[] {"NachmittagAuto#" + (no+1) });
-                waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"NachmittagAuto#" + (no+2) });
+                waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1,new String[] {"Auto#" + ((no+1)  - (Math.random()<0.3 ? 1000 : 0))});
+                waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"Auto#" + ((no+2)  - (Math.random()<0.3 ? 1000 : 0))});
                 break;
             case 3:
                 if(percentageCounter == 0){
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2,new String[] {"NachmittagAuto#" + (no+1), "NachmittagAuto#"+ (no+2) });
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"NachmittagAuto#" + (no+3) });
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1000 : 0)), "Auto#"+ ((no+2) - (Math.random()<0.3 ? 1000 : 0)) });
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"Auto#" + ((no+3) - (Math.random()<0.3 ? 1000 : 0)) });
                     percentageCounter++;
                 }else{
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1,new String[] {"NachmittagAuto#" + (no+1) });
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"NachmittagAuto#" + (no+2),"NachmittagAuto#" + (no+3) });
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(1,new String[] {"Auto#" + ((no+1)  - (Math.random()<0.3 ? 1000 : 0))});
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"Auto#" + ((no+2) - (Math.random()<0.3 ? 1000 : 0)),"Auto#" + ((no+3)  - (Math.random()<0.3 ? 1000 : 0))});
                     percentageCounter--;
                 }
                 break;
@@ -123,17 +129,17 @@ public class ZeitSimulator implements Runnable {
         int kunden = (int) Math.floor(Math.random()*(3)+3);
         switch (kunden) {
             case 6:
-                waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(4,new String[] {"RushHourAuto#" + (no+1),"RushHourAuto#" + (no+2),"RushHourAuto#" + (no+3),"Auto#" + (no+4) });
-                waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"RushHourAuto#" + (no+5),"RushHourAuto#" + (no+6)});
+                waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(4,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+2) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+3) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+4)  - (Math.random()<0.3 ? 1100 : 0))});
+                waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"Auto#" + ((no+5) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+6) - (Math.random()<0.3 ? 1100 : 0))});
                 break;
             case 5:
                 if(percentageCounter == 0){
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(4,new String[] {"RushHourAuto#" + (no+1),"RushHourAuto#" + (no+2),"RushHourAuto#" + (no+3),"RushHourAuto#" + (no+4) });
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"RushHourAuto#" + (no+1)});
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(4,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+2) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+3) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+4) - (Math.random()<0.3 ? 1100 : 0)) });
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1100 : 0))});
                     percentageCounter++;
                 }else{
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(3,new String[] {"RushHourAuto#" + (no+1),"RushHourAuto#" + (no+2),"RushHourAuto#" + (no+3)});
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"RushHourAuto#" + (no+4),"RushHourAuto#" + (no+5)}); 
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(3,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+2) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+3) - (Math.random()<0.3 ? 1100 : 0))});
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"Auto#" + ((no+4) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+5) - (Math.random()<0.3 ? 1100 : 0))}); 
                     if (percentageCounter == 1){
                         percentageCounter++;
                     }else{
@@ -145,12 +151,12 @@ public class ZeitSimulator implements Runnable {
                 break;
             case 4:
                 if(percentageCounter == 1){
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2,new String[] {"RushHourAuto#" + (no+1),"RushHourAuto#" + (no+2)});
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"RushHourAuto#" + (no+3),"RushHourAuto#" + (no+4)}); 
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+2) - (Math.random()<0.3 ? 1100 : 0))});
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(2,new String[] {"Auto#" + ((no+3) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+4) - (Math.random()<0.3 ? 1100 : 0))}); 
                     percentageCounter--;
                 }else{
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(3,new String[] {"RushHourAuto#" + (no+1),"RushHourAuto#" + (no+2),"RushHourAuto#" + (no+3)});
-                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"RushHourAuto#" + (no+4)});
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(3,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+2) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+3) - (Math.random()<0.3 ? 1100 : 0))});
+                    waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"Auto#" + ((no+4) - (Math.random()<0.3 ? 1100 : 0))});
                     if (percentageCounter == 2){
                         percentageCounter--;
                     }else {
@@ -160,8 +166,8 @@ public class ZeitSimulator implements Runnable {
                 
                 break;
             case 3: 
-                waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2,new String[] {"RushHourAuto#" + (no+1),"RushHourAuto#" + (no+2)});
-                waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"RushHourAuto#" + (no+3)});
+                waschanlage.warteschlangen.ReiheAutosInWarteschlangeWaschen(2,new String[] {"Auto#" + ((no+1) - (Math.random()<0.3 ? 1100 : 0)),"Auto#" + ((no+2) - (Math.random()<0.3 ? 1100 : 0))});
+                waschanlage.warteschlangen.ReiheAutosInWarteschlangeBeides(1,new String[] {"Auto#" + ((no+3) - (Math.random()<0.3 ? 1100 : 0))});
             break;
             default:
                 break;
@@ -175,7 +181,7 @@ public class ZeitSimulator implements Runnable {
         int kunden = (int) Math.floor(Math.random()*(1)+1);
         List<String> tmpListe = new ArrayList<String>();
         for(int i = 0;i<kunden;i++){
-            tmpListe.add("AbendsAuto#"+(no+i+1));
+            tmpListe.add("Auto#"+((no+i+1) - (Math.random()<0.3 ? 1200 : 0)));
         }
         String[] NamenListe = new String[tmpListe.size()];
         tmpListe.toArray(NamenListe);
